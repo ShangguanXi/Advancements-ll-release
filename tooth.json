@@ -2,7 +2,7 @@
   "format_version": 3,
   "format_uuid": "289f771f-2c9a-4d73-9f3f-8492495a924d",
   "tooth": "github.com/ShangguanXi/Advancements-ll-release",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "info": {
     "name": "Advancements",
     "description": "Java Edition advancements for Minecraft Bedrock, as a native LeviLamina mod",

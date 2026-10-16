@@ -1,7 +1,7 @@
 {
   "name": "Advancements",
   "entry": "Advancements.dll",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "native",
   "platform": "client",
   "description": "Java Edition advancements for Minecraft Bedrock, as a native LeviLamina mod"
