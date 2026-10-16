@@ -1,0 +1,6 @@
+{
+    "ui_defs": [
+        "ui/advancements_screen.json",
+        "ui/advancements_toast.json"
+    ]
+}

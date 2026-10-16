@@ -1,0 +1,51 @@
+{
+    "parent": "minecraft:adventure/minecraft_trials_edition",
+    "display": {
+        "description": {
+            "translate": "advancements.adventure.blowback.description"
+        },
+        "frame": "challenge",
+        "icon": {
+            "id": "minecraft:wind_charge"
+        },
+        "title": {
+            "translate": "advancements.adventure.blowback.title"
+        }
+    },
+    "criteria": {
+        "blowback": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "minecraft:entity_type": "minecraft:breeze"
+                        }
+                    }
+                ],
+                "killing_blow": {
+                    "direct_entity": {
+                        "minecraft:entity_type": "minecraft:breeze_wind_charge_projectile"
+                    },
+                    "tags": [
+                        {
+                            "expected": true,
+                            "id": "minecraft:is_projectile"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "requirements": [
+        [
+            "blowback"
+        ]
+    ],
+    "rewards": {
+        "experience": 40
+    },
+    "sends_telemetry_event": true
+}

@@ -1,0 +1,32 @@
+{
+    "parent": "minecraft:nether/find_fortress",
+    "display": {
+        "description": {
+            "translate": "advancements.nether.get_wither_skull.description"
+        },
+        "icon": {
+            "id": "minecraft:wither_skeleton_skull"
+        },
+        "title": {
+            "translate": "advancements.nether.get_wither_skull.title"
+        }
+    },
+    "criteria": {
+        "wither_skull": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": "minecraft:wither_skeleton_skull"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "wither_skull"
+        ]
+    ],
+    "sends_telemetry_event": true
+}

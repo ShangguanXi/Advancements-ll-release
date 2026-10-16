@@ -1,0 +1,88 @@
+{
+    "parent": "minecraft:husbandry/tadpole_in_a_bucket",
+    "display": {
+        "description": {
+            "translate": "advancements.husbandry.leash_all_frog_variants.description"
+        },
+        "icon": {
+            "id": "minecraft:lead"
+        },
+        "title": {
+            "translate": "advancements.husbandry.leash_all_frog_variants.title"
+        }
+    },
+    "criteria": {
+        "minecraft:cold": {
+            "trigger": "minecraft:player_interacted_with_entity",
+            "conditions": {
+                "entity": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "minecraft:components": {
+                                "minecraft:frog/variant": 1
+                            },
+                            "minecraft:entity_type": "minecraft:frog"
+                        }
+                    }
+                ],
+                "item": {
+                    "items": "minecraft:lead"
+                }
+            }
+        },
+        "minecraft:temperate": {
+            "trigger": "minecraft:player_interacted_with_entity",
+            "conditions": {
+                "entity": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "minecraft:components": {
+                                "minecraft:frog/variant": 0
+                            },
+                            "minecraft:entity_type": "minecraft:frog"
+                        }
+                    }
+                ],
+                "item": {
+                    "items": "minecraft:lead"
+                }
+            }
+        },
+        "minecraft:warm": {
+            "trigger": "minecraft:player_interacted_with_entity",
+            "conditions": {
+                "entity": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "minecraft:components": {
+                                "minecraft:frog/variant": 2
+                            },
+                            "minecraft:entity_type": "minecraft:frog"
+                        }
+                    }
+                ],
+                "item": {
+                    "items": "minecraft:lead"
+                }
+            }
+        }
+    },
+    "requirements": [
+        [
+            "minecraft:cold"
+        ],
+        [
+            "minecraft:temperate"
+        ],
+        [
+            "minecraft:warm"
+        ]
+    ],
+    "sends_telemetry_event": true
+}

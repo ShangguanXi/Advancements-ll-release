@@ -1,0 +1,248 @@
+{
+    "parent": "minecraft:nether/root",
+    "display": {
+        "description": {
+            "translate": "advancements.nether.distract_piglin.description"
+        },
+        "icon": {
+            "id": "minecraft:gold_ingot"
+        },
+        "title": {
+            "translate": "advancements.nether.distract_piglin.title"
+        }
+    },
+    "criteria": {
+        "distract_piglin": {
+            "trigger": "minecraft:thrown_item_picked_up_by_entity",
+            "conditions": {
+                "entity": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "minecraft:entity_type": "minecraft:piglin",
+                            "minecraft:flags": {
+                                "is_baby": false
+                            }
+                        }
+                    }
+                ],
+                "item": {
+                    "items": [
+                        "minecraft:gold_ore",
+                        "minecraft:nether_gold_ore",
+                        "minecraft:deepslate_gold_ore",
+                        "minecraft:gold_block",
+                        "minecraft:gilded_blackstone",
+                        "minecraft:light_weighted_pressure_plate",
+                        "minecraft:gold_ingot",
+                        "minecraft:bell",
+                        "minecraft:clock",
+                        "minecraft:golden_carrot",
+                        "minecraft:glistering_melon_slice",
+                        "minecraft:golden_apple",
+                        "minecraft:enchanted_golden_apple",
+                        "minecraft:golden_helmet",
+                        "minecraft:golden_chestplate",
+                        "minecraft:golden_leggings",
+                        "minecraft:golden_boots",
+                        "minecraft:golden_horse_armor",
+                        "minecraft:golden_nautilus_armor",
+                        "minecraft:golden_sword",
+                        "minecraft:golden_spear",
+                        "minecraft:golden_pickaxe",
+                        "minecraft:golden_shovel",
+                        "minecraft:golden_axe",
+                        "minecraft:golden_hoe",
+                        "minecraft:raw_gold",
+                        "minecraft:raw_gold_block",
+                        "minecraft:golden_dandelion"
+                    ]
+                },
+                "player": [
+                    {
+                        "condition": "minecraft:inverted",
+                        "term": {
+                            "condition": "minecraft:entity_properties",
+                            "entity": "this",
+                            "predicate": {
+                                "minecraft:equipment": {
+                                    "head": {
+                                        "items": [
+                                            "minecraft:golden_helmet",
+                                            "minecraft:golden_chestplate",
+                                            "minecraft:golden_leggings",
+                                            "minecraft:golden_boots"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "condition": "minecraft:inverted",
+                        "term": {
+                            "condition": "minecraft:entity_properties",
+                            "entity": "this",
+                            "predicate": {
+                                "minecraft:equipment": {
+                                    "chest": {
+                                        "items": [
+                                            "minecraft:golden_helmet",
+                                            "minecraft:golden_chestplate",
+                                            "minecraft:golden_leggings",
+                                            "minecraft:golden_boots"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "condition": "minecraft:inverted",
+                        "term": {
+                            "condition": "minecraft:entity_properties",
+                            "entity": "this",
+                            "predicate": {
+                                "minecraft:equipment": {
+                                    "legs": {
+                                        "items": [
+                                            "minecraft:golden_helmet",
+                                            "minecraft:golden_chestplate",
+                                            "minecraft:golden_leggings",
+                                            "minecraft:golden_boots"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "condition": "minecraft:inverted",
+                        "term": {
+                            "condition": "minecraft:entity_properties",
+                            "entity": "this",
+                            "predicate": {
+                                "minecraft:equipment": {
+                                    "feet": {
+                                        "items": [
+                                            "minecraft:golden_helmet",
+                                            "minecraft:golden_chestplate",
+                                            "minecraft:golden_leggings",
+                                            "minecraft:golden_boots"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "distract_piglin_directly": {
+            "trigger": "minecraft:player_interacted_with_entity",
+            "conditions": {
+                "entity": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "minecraft:entity_type": "minecraft:piglin",
+                            "minecraft:flags": {
+                                "is_baby": false
+                            }
+                        }
+                    }
+                ],
+                "item": {
+                    "items": "minecraft:gold_ingot"
+                },
+                "player": [
+                    {
+                        "condition": "minecraft:inverted",
+                        "term": {
+                            "condition": "minecraft:entity_properties",
+                            "entity": "this",
+                            "predicate": {
+                                "minecraft:equipment": {
+                                    "head": {
+                                        "items": [
+                                            "minecraft:golden_helmet",
+                                            "minecraft:golden_chestplate",
+                                            "minecraft:golden_leggings",
+                                            "minecraft:golden_boots"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "condition": "minecraft:inverted",
+                        "term": {
+                            "condition": "minecraft:entity_properties",
+                            "entity": "this",
+                            "predicate": {
+                                "minecraft:equipment": {
+                                    "chest": {
+                                        "items": [
+                                            "minecraft:golden_helmet",
+                                            "minecraft:golden_chestplate",
+                                            "minecraft:golden_leggings",
+                                            "minecraft:golden_boots"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "condition": "minecraft:inverted",
+                        "term": {
+                            "condition": "minecraft:entity_properties",
+                            "entity": "this",
+                            "predicate": {
+                                "minecraft:equipment": {
+                                    "legs": {
+                                        "items": [
+                                            "minecraft:golden_helmet",
+                                            "minecraft:golden_chestplate",
+                                            "minecraft:golden_leggings",
+                                            "minecraft:golden_boots"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "condition": "minecraft:inverted",
+                        "term": {
+                            "condition": "minecraft:entity_properties",
+                            "entity": "this",
+                            "predicate": {
+                                "minecraft:equipment": {
+                                    "feet": {
+                                        "items": [
+                                            "minecraft:golden_helmet",
+                                            "minecraft:golden_chestplate",
+                                            "minecraft:golden_leggings",
+                                            "minecraft:golden_boots"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "distract_piglin",
+            "distract_piglin_directly"
+        ]
+    ],
+    "sends_telemetry_event": true
+}

@@ -1,0 +1,32 @@
+{
+    "parent": "minecraft:nether/root",
+    "display": {
+        "description": {
+            "translate": "advancements.nether.obtain_crying_obsidian.description"
+        },
+        "icon": {
+            "id": "minecraft:crying_obsidian"
+        },
+        "title": {
+            "translate": "advancements.nether.obtain_crying_obsidian.title"
+        }
+    },
+    "criteria": {
+        "crying_obsidian": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": "minecraft:crying_obsidian"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "crying_obsidian"
+        ]
+    ],
+    "sends_telemetry_event": true
+}

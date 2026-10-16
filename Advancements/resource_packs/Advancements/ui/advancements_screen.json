@@ -1,0 +1,506 @@
+{
+    "namespace": "advancements",
+
+    // 绑定约定:
+    //   随分页变的数据不写条件,切分页时 C++ 换掉数据并返回 ViewRequest::Refresh 让它们重新求值;
+    //   永远不变的(标题、分页图标、标题条高)用 "once";随画布滚动变的偏移用 "always",C++ 只在值变了时才写;
+    //   被 #texture 覆盖的图片必须写默认 texture,否则不显示;
+    //   拉伸的 1 像素图要写 "keep_ratio": false,默认保持纵横比,3x33 的竖线只画成 3x3 的方块(2026-10-15 实测);
+    //   #size_binding_x/y 的值是父控件尺寸的倍数,不是像素(实测:视口里的画布绑 113,高变成 113x113=12769),
+    //   要按像素给尺寸就放进 1x1 的父控件;两个方向都要走绑定,只写在属性袋里的那一维排版和绘制对不上;
+    //   集合网格只创建落在视口里的格子(160 格竖排只建了 115 个),所以格子固定在视口左上角,不跟画布动
+
+    "advancements_screen@common.base_screen": {
+        "$screen_content": "advancements.screen_content"
+    },
+
+    "screen_content": {
+        "type": "panel",
+        "controls": [
+            { "window@advancements.window": {} }
+        ]
+    },
+
+    // 照 JE AdvancementsScreen:窗口 252x140 居中;内区(树的视口)从 (9,18) 起 234x113;
+    // window.png 中间透明,整张盖在视口上层;分页在窗口上方,压住窗口上沿 4 像素
+    "window": {
+        "type": "panel",
+        "size": [ 252, 140 ],
+        "anchor_from": "center",
+        "anchor_to": "center",
+        "controls": [
+            { "viewport@advancements.viewport": {} },
+            {
+                "frame": {
+                    "type": "image",
+                    "texture": "textures/ui/advancements/window",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "size": [ 252, 140 ],
+                    "layer": 10
+                }
+            },
+            {
+                "title": {
+                    "type": "label",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "offset": [ 8, 6 ],
+                    "layer": 11,
+                    "color": [ 0.25, 0.25, 0.25 ],
+                    "text": "#adv_title",
+                    "bindings": [
+                        { "binding_name": "#adv_title", "binding_condition": "once" },
+                        // 每帧求值一次:C++ 借它读排版信息、处理拖动
+                        { "binding_name": "#adv_heartbeat", "binding_condition": "always" }
+                    ]
+                }
+            },
+            { "tabs@advancements.tabs": {} },
+            // 分页点击:五个透明按钮叠在分页上,各自一个按钮名
+            { "tab_button_0@advancements.tab_button": { "offset": [ 0, -28 ], "$pressed_button_name": "button.advancements_tab_0" } },
+            { "tab_button_1@advancements.tab_button": { "offset": [ 32, -28 ], "$pressed_button_name": "button.advancements_tab_1" } },
+            { "tab_button_2@advancements.tab_button": { "offset": [ 64, -28 ], "$pressed_button_name": "button.advancements_tab_2" } },
+            { "tab_button_3@advancements.tab_button": { "offset": [ 96, -28 ], "$pressed_button_name": "button.advancements_tab_3" } },
+            { "tab_button_4@advancements.tab_button": { "offset": [ 128, -28 ], "$pressed_button_name": "button.advancements_tab_4" } },
+            // 关闭按钮:JE 没有,加在标题栏右侧;用原版浅色关闭按钮的贴图。原版的 light_close_button
+            // 带一个全局的 #close_button_visible 绑定,所以从基础的 close_button 改
+            {
+                "close_button@common.close_button": {
+                    "size": [ 15, 15 ],
+                    "layer": 14,
+                    "$close_button_offset": [ -3, 2 ],
+                    "$close_button_panel_size": [ 15, 15 ],
+                    "$close_button_to_button_id": "button.advancements_close",
+                    "controls": [
+                        { "default@common.close_button_panel": { "$close_button_texture": "textures/ui/close_button_default_light" } },
+                        { "hover@common.close_button_panel": { "$close_button_texture": "textures/ui/close_button_hover_light" } },
+                        { "pressed@common.close_button_panel": { "$close_button_texture": "textures/ui/close_button_pressed_light" } }
+                    ]
+                }
+            }
+        ]
+    },
+
+    "viewport": {
+        "type": "panel",
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "offset": [ 9, 18 ],
+        "size": [ 234, 113 ],
+        "layer": 1,
+        "clips_children": true,
+        "controls": [
+            // 拖动:左键在空白处按下映射成 button.advancements_drag,之后的指针事件由 C++ 算位移
+            {
+                "drag_area": {
+                    "type": "input_panel",
+                    "size": [ "100%", "100%" ],
+                    "layer": 1,
+                    "button_mappings": [
+                        { "from_button_id": "button.menu_select", "to_button_id": "button.advancements_drag", "mapping_type": "pressed" },
+                        // ESC:进度界面自己关(之前按 ESC 没反应)
+                        { "from_button_id": "button.menu_cancel", "to_button_id": "button.advancements_close", "mapping_type": "global" }
+                    ]
+                }
+            },
+            {
+                "background": {
+                    "type": "grid",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "size": [ 1, 1 ],
+                    "layer": 2,
+                    "grid_item_template": "advancements.background_cell",
+                    "grid_dimensions": [ 1, 1 ],
+                    "collection_name": "adv_canvas"
+                }
+            },
+            {
+                "lines": {
+                    "type": "grid",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "size": [ 20, 16 ],
+                    "layer": 3,
+                    "grid_item_template": "advancements.line",
+                    "grid_dimensions": [ 20, 16 ],
+                    "collection_name": "adv_lines"
+                }
+            },
+            {
+                // 一个可见分页都没有时的提示(JE advancements.empty + sad_label),画在内区中间
+                "empty": {
+                    "type": "label",
+                    "anchor_from": "center",
+                    "anchor_to": "center",
+                    "layer": 6,
+                    "text_alignment": "center",
+                    "color": [ 1.0, 1.0, 1.0 ],
+                    "text": "#adv_empty",
+                    "bindings": [ { "binding_name": "#adv_empty" } ]
+                }
+            },
+            {
+                "nodes": {
+                    "type": "grid",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "size": [ 8, 8 ],
+                    "layer": 5,
+                    "grid_item_template": "advancements.node",
+                    "grid_dimensions": [ 8, 8 ],
+                    "collection_name": "adv_nodes"
+                }
+            }
+        ]
+    },
+
+    // 背景:tools/gen_advancements.py 预先拼好的整张图(256x768,盖得住最大的画布),随滚动整体移动。
+    // 之前用 tiled 逐块平铺,非整数界面缩放下块与块之间会出 1 像素的缝
+    "background_cell": {
+        "type": "panel",
+        "size": [ 1, 1 ],
+        "controls": [
+            {
+                "image": {
+                    "type": "image",
+                    "texture": "textures/ui/advancements/backgrounds/stone_tiled",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "size": [ 256, 768 ],
+                    "keep_ratio": false,
+                    "bindings": [
+                        { "binding_type": "collection", "binding_collection_name": "adv_canvas", "binding_condition": "always", "binding_name": "#adv_canvas_offset", "binding_name_override": "#offset" },
+                        { "binding_type": "collection", "binding_collection_name": "adv_canvas", "binding_name": "#adv_canvas_bg", "binding_name_override": "#texture" }
+                    ]
+                }
+            }
+        ]
+    },
+
+    // 一段连线:1x1 像素图按绑定的偏移和尺寸拉伸(黑影 / 白线由贴图区分)。格子 1x1,尺寸倍数就是像素
+    "line": {
+        "type": "panel",
+        "size": [ 1, 1 ],
+        "controls": [
+            {
+                "segment": {
+                    "type": "image",
+                    "texture": "textures/ui/advancements/pixel_black",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "size": [ 1, 1 ],
+                    "keep_ratio": false,
+                    "property_bag": {
+                        "#size_binding_x": 1,
+                        "#size_binding_y": 1
+                    },
+                    "bindings": [
+                        { "binding_type": "collection", "binding_collection_name": "adv_lines", "binding_condition": "always", "binding_name": "#adv_line_offset", "binding_name_override": "#offset" },
+                        { "binding_type": "collection", "binding_collection_name": "adv_lines", "binding_name": "#adv_line_w", "binding_name_override": "#size_binding_x" },
+                        { "binding_type": "collection", "binding_collection_name": "adv_lines", "binding_name": "#adv_line_h", "binding_name_override": "#size_binding_y" },
+                        { "binding_type": "collection", "binding_collection_name": "adv_lines", "binding_name": "#adv_line_tex", "binding_name_override": "#texture" }
+                    ]
+                }
+            }
+        ]
+    },
+
+    // 一个节点:JE widget 的 x/y 处,框在 +3,图标在 (+8,+5);悬停 / 按下时显示 JE 样式的提示
+    "node": {
+        "type": "panel",
+        "size": [ 1, 1 ],
+        "controls": [
+            {
+                "positioned": {
+                    "type": "panel",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "size": [ 29, 26 ],
+                    "bindings": [
+                        { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_condition": "always", "binding_name": "#adv_node_offset", "binding_name_override": "#offset" }
+                    ],
+                    "controls": [
+                        { "frame@advancements.node_frame": { "layer": 1 } },
+                        { "icon@advancements.node_icon": { "layer": 2 } },
+                        {
+                            "hit@common.button": {
+                                "$pressed_button_name": "button.advancements_node",
+                                "anchor_from": "top_left",
+                                "anchor_to": "top_left",
+                                "size": [ 29, 26 ],
+                                "layer": 3,
+                                "controls": [
+                                    { "default": { "type": "panel", "size": [ "100%", "100%" ] } },
+                                    { "hover@advancements.node_hover": {} },
+                                    { "pressed@advancements.node_hover": {} }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+
+    "node_frame": {
+        "type": "image",
+        "texture": "textures/ui/advancements/frame_task_unobtained",
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "offset": [ 3, 0 ],
+        "size": [ 26, 26 ],
+        "bindings": [
+            { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_name": "#adv_node_frame", "binding_name_override": "#texture" }
+        ]
+    },
+
+    "node_icon@common.item_renderer": {
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "offset": [ 8, 5 ],
+        "size": [ 16, 16 ],
+        "bindings": [
+            { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_name": "#adv_node_item", "binding_name_override": "#item_renderer_data" }
+        ]
+    },
+
+    // 悬停:照 JE AdvancementTab.drawTooltips 先给整个内区压一层 30% 的黑,再画提示,最上层重画框和图标
+    "node_hover": {
+        "type": "panel",
+        "size": [ "100%", "100%" ],
+        "controls": [
+            {
+                // 黑幕正好盖住视口(C++ 给偏移)。按钮会裁掉子控件,所以不受裁剪,
+                // 之前用 4000x4000 靠视口裁剪,结果被裁成只剩按钮那一块,看不出来
+                "dim": {
+                    "type": "image",
+                    "texture": "textures/ui/advancements/pixel_black",
+                    "keep_ratio": false,
+                    "alpha": 0.3,
+                    "allow_clipping": false,
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "size": [ 234, 113 ],
+                    "layer": 1,
+                    "bindings": [
+                        { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_condition": "always", "binding_name": "#adv_tip_dim_offset", "binding_name_override": "#offset" }
+                    ]
+                }
+            },
+            { "tooltip@advancements.tooltip": { "layer": 2 } },
+            { "frame_top@advancements.node_frame": { "layer": 8 } },
+            { "icon_top@advancements.node_icon": { "layer": 9 } }
+        ]
+    },
+
+    // 提示:左缘在节点 x(超出屏幕右边时由 C++ 左翻);标题条 26 高;描述框高 32 + 9*行数,
+    // 盖住标题条往下,下方放不下时改到上方。不受视口裁剪(JE 的提示也画在窗口框外面)
+    "tooltip": {
+        "type": "panel",
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "size": [ 1, 1 ],
+        "allow_clipping": false,
+        "bindings": [
+            { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_condition": "always", "binding_name": "#adv_tip_offset", "binding_name_override": "#offset" }
+        ],
+        "controls": [
+            {
+                "desc_unit": {
+                    "type": "panel",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "size": [ 1, 1 ],
+                    "layer": 1,
+                    "bindings": [
+                        { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_condition": "always", "binding_name": "#adv_tip_desc_offset", "binding_name_override": "#offset" }
+                    ],
+                    "controls": [
+                        {
+                            "desc_box": {
+                                "type": "image",
+                                "texture": "textures/ui/advancements/description_box",
+                                "nineslice_size": 10,
+                                "keep_ratio": false,
+                                "anchor_from": "top_left",
+                                "anchor_to": "top_left",
+                                "size": [ 1, 1 ],
+                                "property_bag": {
+                                    "#size_binding_x": 1,
+                                    "#size_binding_y": 1
+                                },
+                                "bindings": [
+                                    { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_name": "#adv_tip_w", "binding_name_override": "#size_binding_x" },
+                                    { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_name": "#adv_tip_desc_h", "binding_name_override": "#size_binding_y" }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "desc": {
+                    "type": "label",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "layer": 2,
+                    "shadow": false,
+                    "color": [ 0.667, 0.667, 0.667 ],
+                    "text": "#adv_node_desc",
+                    "bindings": [
+                        { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_name": "#adv_node_desc" },
+                        { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_condition": "always", "binding_name": "#adv_tip_desc_text_offset", "binding_name_override": "#offset" }
+                    ]
+                }
+            },
+            {
+                "bar_unit": {
+                    "type": "panel",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "size": [ 1, 1 ],
+                    "layer": 3,
+                    "controls": [
+                        {
+                            "bar": {
+                                "type": "image",
+                                "texture": "textures/ui/advancements/box_unobtained",
+                                "nineslice_size": 10,
+                                "keep_ratio": false,
+                                "anchor_from": "top_left",
+                                "anchor_to": "top_left",
+                                "size": [ 1, 1 ],
+                                "property_bag": {
+                                    "#size_binding_x": 1,
+                                    "#size_binding_y": 1
+                                },
+                                "bindings": [
+                                    { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_name": "#adv_tip_w", "binding_name_override": "#size_binding_x" },
+                                    { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_condition": "once", "binding_name": "#adv_tip_bar_h", "binding_name_override": "#size_binding_y" },
+                                    { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_name": "#adv_node_box", "binding_name_override": "#texture" }
+                                ]
+                            }
+                        },
+                        {
+                            // JE 部分完成时标题条左边一段是已获得的颜色:叠一整条已获得的,按比例从右往左裁掉(同原版经验条的 clip_direction)
+                            "bar_split": {
+                                "type": "image",
+                                "texture": "textures/ui/advancements/box_unobtained",
+                                "nineslice_size": 10,
+                                "keep_ratio": false,
+                                "anchor_from": "top_left",
+                                "anchor_to": "top_left",
+                                "size": [ 1, 1 ],
+                                "layer": 1,
+                                "clip_direction": "left",
+                                "property_bag": {
+                                    "#size_binding_x": 1,
+                                    "#size_binding_y": 1
+                                },
+                                "bindings": [
+                                    { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_name": "#adv_tip_w", "binding_name_override": "#size_binding_x" },
+                                    { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_condition": "once", "binding_name": "#adv_tip_bar_h", "binding_name_override": "#size_binding_y" },
+                                    { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_name": "#adv_node_box_split", "binding_name_override": "#texture" },
+                                    { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_name": "#adv_tip_bar_clip", "binding_name_override": "#clip_ratio" }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                // x/y 进度(JE 只在多于一组要求时画)
+                "progress": {
+                    "type": "label",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "layer": 4,
+                    "shadow": true,
+                    "color": [ 1.0, 1.0, 1.0 ],
+                    "text": "#adv_tip_progress",
+                    "bindings": [
+                        { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_name": "#adv_tip_progress" },
+                        { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_condition": "always", "binding_name": "#adv_tip_progress_offset", "binding_name_override": "#offset" }
+                    ]
+                }
+            },
+            {
+                "title": {
+                    "type": "label",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "layer": 4,
+                    "shadow": true,
+                    "color": [ 1.0, 1.0, 1.0 ],
+                    "text": "#adv_node_title",
+                    "bindings": [
+                        { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_name": "#adv_node_title" },
+                        { "binding_type": "collection", "binding_collection_name": "adv_nodes", "binding_condition": "always", "binding_name": "#adv_tip_title_offset", "binding_name_override": "#offset" }
+                    ]
+                }
+            }
+        ]
+    },
+
+    // 分页:JE 上方分页 28x32、间距 4,所以格子 32x32;图标在 (+6,+9)
+    "tabs": {
+        "type": "grid",
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "offset": [ 0, -28 ],
+        "size": [ 160, 32 ],
+        "layer": 12,
+        "grid_item_template": "advancements.tab",
+        "grid_dimensions": [ 5, 1 ],
+        "collection_name": "adv_tabs"
+    },
+
+    "tab": {
+        "type": "panel",
+        "size": [ 32, 32 ],
+        "bindings": [
+            { "binding_type": "collection", "binding_collection_name": "adv_tabs", "binding_name": "#adv_tab_visible", "binding_name_override": "#visible" }
+        ],
+        "controls": [
+            {
+                "bg": {
+                    "type": "image",
+                    "texture": "textures/ui/advancements/tab_above_middle",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "size": [ 28, 32 ],
+                    "layer": 1,
+                    "bindings": [
+                        { "binding_type": "collection", "binding_collection_name": "adv_tabs", "binding_name": "#adv_tab_tex", "binding_name_override": "#texture" }
+                    ]
+                }
+            },
+            {
+                "icon@common.item_renderer": {
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "offset": [ 6, 9 ],
+                    "size": [ 16, 16 ],
+                    "layer": 2,
+                    "bindings": [
+                        { "binding_type": "collection", "binding_collection_name": "adv_tabs", "binding_condition": "once", "binding_name": "#adv_tab_item", "binding_name_override": "#item_renderer_data" }
+                    ]
+                }
+            }
+        ]
+    },
+
+    "tab_button@common.button": {
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "size": [ 28, 32 ],
+        "layer": 13,
+        "controls": [
+            { "default": { "type": "panel", "size": [ "100%", "100%" ] } },
+            { "hover": { "type": "panel", "size": [ "100%", "100%" ] } },
+            { "pressed": { "type": "panel", "size": [ "100%", "100%" ] } }
+        ]
+    }
+}

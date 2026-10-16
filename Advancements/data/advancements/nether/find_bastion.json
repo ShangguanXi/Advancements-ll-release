@@ -1,0 +1,38 @@
+{
+    "parent": "minecraft:nether/root",
+    "display": {
+        "description": {
+            "translate": "advancements.nether.find_bastion.description"
+        },
+        "icon": {
+            "id": "minecraft:polished_blackstone_bricks"
+        },
+        "title": {
+            "translate": "advancements.nether.find_bastion.title"
+        }
+    },
+    "criteria": {
+        "bastion": {
+            "trigger": "minecraft:location",
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "minecraft:location": {
+                                "structures": "minecraft:bastion_remnant"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "bastion"
+        ]
+    ],
+    "sends_telemetry_event": true
+}

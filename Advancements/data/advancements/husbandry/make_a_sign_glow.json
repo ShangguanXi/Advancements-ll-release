@@ -1,0 +1,80 @@
+{
+    "parent": "minecraft:husbandry/root",
+    "display": {
+        "description": {
+            "translate": "advancements.husbandry.make_a_sign_glow.description"
+        },
+        "icon": {
+            "id": "minecraft:glow_ink_sac"
+        },
+        "title": {
+            "translate": "advancements.husbandry.make_a_sign_glow.title"
+        }
+    },
+    "criteria": {
+        "make_a_sign_glow": {
+            "trigger": "minecraft:item_used_on_block",
+            "conditions": {
+                "location": [
+                    {
+                        "condition": "minecraft:location_check",
+                        "predicate": {
+                            "block": {
+                                "blocks": [
+                                    "minecraft:standing_sign",
+                                    "minecraft:spruce_standing_sign",
+                                    "minecraft:birch_standing_sign",
+                                    "minecraft:acacia_standing_sign",
+                                    "minecraft:jungle_standing_sign",
+                                    "minecraft:darkoak_standing_sign",
+                                    "minecraft:pale_oak_standing_sign",
+                                    "minecraft:crimson_standing_sign",
+                                    "minecraft:warped_standing_sign",
+                                    "minecraft:mangrove_standing_sign",
+                                    "minecraft:bamboo_standing_sign",
+                                    "minecraft:cherry_standing_sign",
+                                    "minecraft:wall_sign",
+                                    "minecraft:spruce_wall_sign",
+                                    "minecraft:birch_wall_sign",
+                                    "minecraft:acacia_wall_sign",
+                                    "minecraft:jungle_wall_sign",
+                                    "minecraft:darkoak_wall_sign",
+                                    "minecraft:pale_oak_wall_sign",
+                                    "minecraft:crimson_wall_sign",
+                                    "minecraft:warped_wall_sign",
+                                    "minecraft:mangrove_wall_sign",
+                                    "minecraft:bamboo_wall_sign",
+                                    "minecraft:cherry_wall_sign",
+                                    "minecraft:oak_hanging_sign",
+                                    "minecraft:spruce_hanging_sign",
+                                    "minecraft:birch_hanging_sign",
+                                    "minecraft:acacia_hanging_sign",
+                                    "minecraft:cherry_hanging_sign",
+                                    "minecraft:jungle_hanging_sign",
+                                    "minecraft:dark_oak_hanging_sign",
+                                    "minecraft:pale_oak_hanging_sign",
+                                    "minecraft:crimson_hanging_sign",
+                                    "minecraft:warped_hanging_sign",
+                                    "minecraft:mangrove_hanging_sign",
+                                    "minecraft:bamboo_hanging_sign"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "condition": "minecraft:match_tool",
+                        "predicate": {
+                            "items": "minecraft:glow_ink_sac"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "make_a_sign_glow"
+        ]
+    ],
+    "sends_telemetry_event": true
+}

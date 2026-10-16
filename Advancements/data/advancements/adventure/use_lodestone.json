@@ -1,0 +1,43 @@
+{
+    "parent": "minecraft:adventure/root",
+    "display": {
+        "description": {
+            "translate": "advancements.adventure.use_lodestone.description"
+        },
+        "icon": {
+            "id": "minecraft:lodestone"
+        },
+        "title": {
+            "translate": "advancements.adventure.use_lodestone.title"
+        }
+    },
+    "criteria": {
+        "use_lodestone": {
+            "trigger": "minecraft:item_used_on_block",
+            "conditions": {
+                "location": [
+                    {
+                        "condition": "minecraft:location_check",
+                        "predicate": {
+                            "block": {
+                                "blocks": "minecraft:lodestone"
+                            }
+                        }
+                    },
+                    {
+                        "condition": "minecraft:match_tool",
+                        "predicate": {
+                            "items": "minecraft:compass"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "use_lodestone"
+        ]
+    ],
+    "sends_telemetry_event": true
+}

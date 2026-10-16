@@ -1,0 +1,27 @@
+{
+    "display": {
+        "announce_to_chat": false,
+        "background": "textures/ui/advancements/backgrounds/husbandry_tiled",
+        "description": {
+            "translate": "advancements.husbandry.root.description"
+        },
+        "icon": {
+            "id": "minecraft:hay_block"
+        },
+        "show_toast": false,
+        "title": {
+            "translate": "advancements.husbandry.root.title"
+        }
+    },
+    "criteria": {
+        "consumed_item": {
+            "trigger": "minecraft:consume_item"
+        }
+    },
+    "requirements": [
+        [
+            "consumed_item"
+        ]
+    ],
+    "sends_telemetry_event": true
+}

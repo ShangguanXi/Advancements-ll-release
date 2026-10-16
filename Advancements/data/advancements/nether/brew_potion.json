@@ -1,0 +1,25 @@
+{
+    "parent": "minecraft:nether/obtain_blaze_rod",
+    "display": {
+        "description": {
+            "translate": "advancements.nether.brew_potion.description"
+        },
+        "icon": {
+            "id": "minecraft:potion"
+        },
+        "title": {
+            "translate": "advancements.nether.brew_potion.title"
+        }
+    },
+    "criteria": {
+        "potion": {
+            "trigger": "minecraft:brewed_potion"
+        }
+    },
+    "requirements": [
+        [
+            "potion"
+        ]
+    ],
+    "sends_telemetry_event": true
+}

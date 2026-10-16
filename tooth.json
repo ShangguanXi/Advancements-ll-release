@@ -1,0 +1,39 @@
+{
+  "format_version": 3,
+  "format_uuid": "289f771f-2c9a-4d73-9f3f-8492495a924d",
+  "tooth": "github.com/ShangguanXi/Advancements-ll-release",
+  "version": "0.1.0",
+  "info": {
+    "name": "Advancements",
+    "description": "Java Edition advancements for Minecraft Bedrock, as a native LeviLamina mod",
+    "tags": [
+      "platform:levilamina",
+      "type:mod"
+    ],
+    "avatar_url": "https://raw.githubusercontent.com/ShangguanXi/Advancements-ll-release/HEAD/icon.jpg"
+  },
+  "variants": [
+    {
+      "label": "client",
+      "platform": "win-x64",
+      "dependencies": {
+        "github.com/LiteLDev/LeviLamina#client": "26.51.7"
+      },
+      "assets": [
+        {
+          "type": "zip",
+          "urls": [
+            "https://{{tooth}}/releases/download/v{{version}}/Advancements-v{{version}}-LeviLamina-windows-26.51.zip"
+          ],
+          "placements": [
+            {
+              "type": "dir",
+              "src": "Advancements/",
+              "dest": "mods/Advancements/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

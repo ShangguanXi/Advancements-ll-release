@@ -1,0 +1,36 @@
+{
+    "parent": "minecraft:nether/root",
+    "display": {
+        "description": {
+            "translate": "advancements.nether.fast_travel.description"
+        },
+        "frame": "challenge",
+        "icon": {
+            "id": "minecraft:empty_map"
+        },
+        "title": {
+            "translate": "advancements.nether.fast_travel.title"
+        }
+    },
+    "criteria": {
+        "travelled": {
+            "trigger": "minecraft:nether_travel",
+            "conditions": {
+                "distance": {
+                    "horizontal": {
+                        "min": 7000.0
+                    }
+                }
+            }
+        }
+    },
+    "requirements": [
+        [
+            "travelled"
+        ]
+    ],
+    "rewards": {
+        "experience": 100
+    },
+    "sends_telemetry_event": true
+}

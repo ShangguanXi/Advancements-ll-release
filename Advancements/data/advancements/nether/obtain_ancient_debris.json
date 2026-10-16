@@ -1,0 +1,32 @@
+{
+    "parent": "minecraft:nether/root",
+    "display": {
+        "description": {
+            "translate": "advancements.nether.obtain_ancient_debris.description"
+        },
+        "icon": {
+            "id": "minecraft:ancient_debris"
+        },
+        "title": {
+            "translate": "advancements.nether.obtain_ancient_debris.title"
+        }
+    },
+    "criteria": {
+        "ancient_debris": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": "minecraft:ancient_debris"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "ancient_debris"
+        ]
+    ],
+    "sends_telemetry_event": true
+}

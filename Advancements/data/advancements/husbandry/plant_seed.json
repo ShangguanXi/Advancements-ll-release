@@ -1,0 +1,105 @@
+{
+    "parent": "minecraft:husbandry/root",
+    "display": {
+        "description": {
+            "translate": "advancements.husbandry.plant_seed.description"
+        },
+        "icon": {
+            "id": "minecraft:wheat"
+        },
+        "title": {
+            "translate": "advancements.husbandry.plant_seed.title"
+        }
+    },
+    "criteria": {
+        "beetroots": {
+            "trigger": "minecraft:placed_block",
+            "conditions": {
+                "location": [
+                    {
+                        "block": "minecraft:beetroot",
+                        "condition": "minecraft:block_state_property"
+                    }
+                ]
+            }
+        },
+        "melon_stem": {
+            "trigger": "minecraft:placed_block",
+            "conditions": {
+                "location": [
+                    {
+                        "block": "minecraft:melon_stem",
+                        "condition": "minecraft:block_state_property"
+                    }
+                ]
+            }
+        },
+        "nether_wart": {
+            "trigger": "minecraft:placed_block",
+            "conditions": {
+                "location": [
+                    {
+                        "block": "minecraft:nether_wart",
+                        "condition": "minecraft:block_state_property"
+                    }
+                ]
+            }
+        },
+        "pitcher_pod": {
+            "trigger": "minecraft:placed_block",
+            "conditions": {
+                "location": [
+                    {
+                        "block": "minecraft:pitcher_crop",
+                        "condition": "minecraft:block_state_property"
+                    }
+                ]
+            }
+        },
+        "pumpkin_stem": {
+            "trigger": "minecraft:placed_block",
+            "conditions": {
+                "location": [
+                    {
+                        "block": "minecraft:pumpkin_stem",
+                        "condition": "minecraft:block_state_property"
+                    }
+                ]
+            }
+        },
+        "torchflower": {
+            "trigger": "minecraft:placed_block",
+            "conditions": {
+                "location": [
+                    {
+                        "block": "minecraft:torchflower_crop",
+                        "condition": "minecraft:block_state_property"
+                    }
+                ]
+            }
+        },
+        "wheat": {
+            "trigger": "minecraft:placed_block",
+            "conditions": {
+                "location": [
+                    {
+                        "block": "minecraft:wheat",
+                        "condition": "minecraft:block_state_property"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "wheat",
+            "pumpkin_stem",
+            "melon_stem",
+            "beetroots",
+            "nether_wart",
+            "torchflower",
+            "pitcher_pod"
+        ]
+    ],
+    "sends_telemetry_event": true
+}

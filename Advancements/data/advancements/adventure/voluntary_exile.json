@@ -1,0 +1,53 @@
+{
+    "parent": "minecraft:adventure/root",
+    "display": {
+        "description": {
+            "translate": "advancements.adventure.voluntary_exile.description"
+        },
+        "hidden": true,
+        "icon": {
+            "id": "minecraft:banner",
+            "aux": 15
+        },
+        "title": {
+            "translate": "advancements.adventure.voluntary_exile.title"
+        }
+    },
+    "criteria": {
+        "voluntary_exile": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "minecraft:entity_type": [
+                                "minecraft:evocation_illager",
+                                "minecraft:pillager",
+                                "minecraft:ravager",
+                                "minecraft:vindicator",
+                                "minecraft:witch"
+                            ],
+                            "minecraft:equipment": {
+                                "head": {
+                                    "items": {
+                                        "id": "minecraft:banner",
+                                        "aux": 15
+                                    },
+                                    "advancements:ominous_banner": true
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "voluntary_exile"
+        ]
+    ],
+    "sends_telemetry_event": true
+}

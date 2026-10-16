@@ -1,0 +1,100 @@
+{
+    "parent": "minecraft:adventure/root",
+    "display": {
+        "description": {
+            "translate": "advancements.adventure.salvage_sherd.description"
+        },
+        "icon": {
+            "id": "minecraft:brush"
+        },
+        "title": {
+            "translate": "advancements.adventure.salvage_sherd.title"
+        }
+    },
+    "criteria": {
+        "desert_pyramid": {
+            "trigger": "minecraft:player_generates_container_loot",
+            "conditions": {
+                "loot_table": "loot_tables/entities/desert_pyramid_brushable_block"
+            }
+        },
+        "desert_well": {
+            "trigger": "minecraft:player_generates_container_loot",
+            "conditions": {
+                "loot_table": "loot_tables/entities/desert_well_brushable_block"
+            }
+        },
+        "has_sherd": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": [
+                            "minecraft:angler_pottery_sherd",
+                            "minecraft:archer_pottery_sherd",
+                            "minecraft:arms_up_pottery_sherd",
+                            "minecraft:blade_pottery_sherd",
+                            "minecraft:brewer_pottery_sherd",
+                            "minecraft:burn_pottery_sherd",
+                            "minecraft:danger_pottery_sherd",
+                            "minecraft:explorer_pottery_sherd",
+                            "minecraft:friend_pottery_sherd",
+                            "minecraft:heart_pottery_sherd",
+                            "minecraft:heartbreak_pottery_sherd",
+                            "minecraft:howl_pottery_sherd",
+                            "minecraft:miner_pottery_sherd",
+                            "minecraft:mourner_pottery_sherd",
+                            "minecraft:plenty_pottery_sherd",
+                            "minecraft:prize_pottery_sherd",
+                            "minecraft:sheaf_pottery_sherd",
+                            "minecraft:shelter_pottery_sherd",
+                            "minecraft:skull_pottery_sherd",
+                            "minecraft:snort_pottery_sherd",
+                            "minecraft:flow_pottery_sherd",
+                            "minecraft:guster_pottery_sherd",
+                            "minecraft:scrape_pottery_sherd"
+                        ]
+                    }
+                ]
+            }
+        },
+        "ocean_ruin_cold": {
+            "trigger": "minecraft:player_generates_container_loot",
+            "conditions": {
+                "loot_table": "loot_tables/entities/cold_ocean_ruins_brushable_block"
+            }
+        },
+        "ocean_ruin_warm": {
+            "trigger": "minecraft:player_generates_container_loot",
+            "conditions": {
+                "loot_table": "loot_tables/entities/warm_ocean_ruins_brushable_block"
+            }
+        },
+        "trail_ruins_common": {
+            "trigger": "minecraft:player_generates_container_loot",
+            "conditions": {
+                "loot_table": "loot_tables/entities/trail_ruins_brushable_block_common"
+            }
+        },
+        "trail_ruins_rare": {
+            "trigger": "minecraft:player_generates_container_loot",
+            "conditions": {
+                "loot_table": "loot_tables/entities/trail_ruins_brushable_block_rare"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "desert_pyramid",
+            "desert_well",
+            "ocean_ruin_cold",
+            "ocean_ruin_warm",
+            "trail_ruins_rare",
+            "trail_ruins_common"
+        ],
+        [
+            "has_sherd"
+        ]
+    ],
+    "sends_telemetry_event": true
+}

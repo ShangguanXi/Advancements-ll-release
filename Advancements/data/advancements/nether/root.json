@@ -1,0 +1,30 @@
+{
+    "display": {
+        "announce_to_chat": false,
+        "background": "textures/ui/advancements/backgrounds/nether_tiled",
+        "description": {
+            "translate": "advancements.nether.root.description"
+        },
+        "icon": {
+            "id": "minecraft:red_nether_brick"
+        },
+        "show_toast": false,
+        "title": {
+            "translate": "advancements.nether.root.title"
+        }
+    },
+    "criteria": {
+        "entered_nether": {
+            "trigger": "minecraft:changed_dimension",
+            "conditions": {
+                "to": "minecraft:nether"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "entered_nether"
+        ]
+    ],
+    "sends_telemetry_event": true
+}

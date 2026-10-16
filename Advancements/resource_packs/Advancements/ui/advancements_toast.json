@@ -1,0 +1,112 @@
+{
+    "namespace": "advancements_toast",
+
+    // 进度完成提示框(JE AdvancementToast):贴 HUD 右上角往下排,最多 5 个。
+    // 格子 1x1 排成一列,每个框的位置(滑入滑出)由 #adv_toast_offset 每帧给出,数据见 src/client/screen/AdvancementToasts.cpp
+    // 层级:原版 HUD 文字(标题、聊天、动作栏)是 31,这里压在上面。但别再往高调:HUD 里物品图标层级高了就不画,
+    // 2026-10-16 实测面板 100 + 图标时图标全不显示,面板 1 + 图标 60 能显示
+    // 往下让出 34:原版"新配方已解锁"提示框(toast_screen.recipe_unlocked_popup)也贴右上角,高 7 + 10 + 10 + 7
+    "toast_panel": {
+        "type": "panel",
+        "anchor_from": "top_right",
+        "anchor_to": "top_right",
+        "offset": [ 0, 34 ],
+        "size": [ 160, 160 ],
+        "layer": 40,
+        "controls": [
+            {
+                // 每帧推进动画(绑定求值时顺带调用),本身不显示
+                "tick": {
+                    "type": "label",
+                    "size": [ 0, 0 ],
+                    "text": "#adv_toast_tick",
+                    "bindings": [ { "binding_name": "#adv_toast_tick", "binding_condition": "always" } ]
+                }
+            },
+            {
+                "toasts": {
+                    "type": "grid",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "size": [ 1, 5 ],
+                    "grid_item_template": "advancements_toast.toast",
+                    "grid_dimensions": [ 1, 5 ],
+                    "collection_name": "adv_toasts"
+                }
+            }
+        ]
+    },
+
+    "toast": {
+        "type": "panel",
+        "size": [ 1, 1 ],
+        "controls": [
+            {
+                "positioned": {
+                    "type": "panel",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "size": [ 160, 32 ],
+                    "bindings": [
+                        { "binding_type": "collection", "binding_collection_name": "adv_toasts", "binding_condition": "always", "binding_name": "#adv_toast_offset", "binding_name_override": "#offset" }
+                    ],
+                    "controls": [
+                        {
+                            "background": {
+                                "type": "image",
+                                "texture": "textures/ui/advancements/toast",
+                                "anchor_from": "top_left",
+                                "anchor_to": "top_left",
+                                "size": [ 160, 32 ],
+                                "layer": 1
+                            }
+                        },
+                        {
+                            "icon@common.item_renderer": {
+                                "anchor_from": "top_left",
+                                "anchor_to": "top_left",
+                                "offset": [ 8, 8 ],
+                                "size": [ 16, 16 ],
+                                "layer": 2,
+                                // 照原版 HUD 快捷栏的图标(hotbar_hud_item_icon)加 force_update;物品每帧读,同一格换了提示框也跟着换
+                                "property_bag": { "force_update": true },
+                                "bindings": [
+                                    { "binding_type": "collection", "binding_collection_name": "adv_toasts", "binding_condition": "always", "binding_name": "#adv_toast_item", "binding_name_override": "#item_renderer_data" }
+                                ]
+                            }
+                        },
+                        {
+                            "header": {
+                                "type": "label",
+                                "anchor_from": "top_left",
+                                "anchor_to": "top_left",
+                                "layer": 3,
+                                "shadow": false,
+                                "text": "#adv_toast_header",
+                                "bindings": [
+                                    { "binding_type": "collection", "binding_collection_name": "adv_toasts", "binding_condition": "always", "binding_name": "#adv_toast_header" },
+                                    { "binding_type": "collection", "binding_collection_name": "adv_toasts", "binding_condition": "always", "binding_name": "#adv_toast_header_offset", "binding_name_override": "#offset" }
+                                ]
+                            }
+                        },
+                        {
+                            "title": {
+                                "type": "label",
+                                "anchor_from": "top_left",
+                                "anchor_to": "top_left",
+                                "layer": 3,
+                                "shadow": false,
+                                "color": [ 1.0, 1.0, 1.0 ],
+                                "text": "#adv_toast_title",
+                                "bindings": [
+                                    { "binding_type": "collection", "binding_collection_name": "adv_toasts", "binding_condition": "always", "binding_name": "#adv_toast_title" },
+                                    { "binding_type": "collection", "binding_collection_name": "adv_toasts", "binding_condition": "always", "binding_name": "#adv_toast_title_offset", "binding_name_override": "#offset" }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

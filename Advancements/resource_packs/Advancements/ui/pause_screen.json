@@ -1,0 +1,31 @@
+{
+    "namespace": "pause",
+
+    // 主按钮所在的 button_panel 嵌在 menu_background 里面,modifications 够不着;
+    // smaller_buttons_panel 是顶层定义,在它最前面插一行"进度"按钮(位于"退出"按钮下方)
+    "smaller_buttons_panel": {
+        "modifications": [
+            {
+                "array_name": "controls",
+                "operation": "insert_front",
+                "value": [
+                    {
+                        "advancements_button_row": {
+                            "type": "panel",
+                            "size": [ "100%", 30 ],
+                            "controls": [
+                                {
+                                    "advancements_button@pause.pause_button_template": {
+                                        "$pressed_button_name": "button.advancements_open",
+                                        "$button_text": "advancements.pause.open",
+                                        "$focus_override_right": "FOCUS_OVERRIDE_STOP"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
